@@ -1,4 +1,4 @@
-// requiring in models folder and path dependency  
+// requiring in models folder and path dependency to locate files  
 const db = require('../models')
 const path = require('path');
 
@@ -9,12 +9,12 @@ module.exports = (app) => {
     app.get('/', (req, res) => {
         res.sendFile(path.join(__dirname, '../public/index.html'));
     });
+//static page that will render the stats file 
+app.get('/stats', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/stats.html'));
+});
 //static page that will render the exercise file 
     app.get('/exercise', (req, res) => {
         res.sendFile(path.join(__dirname, '../public/exercise.html'));
-    });
-//static page that will render the stats file 
-    app.get('/stats', (req, res) => {
-        res.sendFile(path.join(__dirname, '../public/stats.html'));
     });
 }; 

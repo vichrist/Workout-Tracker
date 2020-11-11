@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 // create a new schema 
 const Schema = mongoose.Schema;
-// create a schema object with requirements 
+// create a schema object with restrictions to data types 
 const ExerciseSchema = new Schema({
     type: String,
     name: String,
