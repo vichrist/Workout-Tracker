@@ -1,33 +1,35 @@
-// require node dependencies 
-const express = require('express'); 
-const mongoose = require('mongoose'); 
-const logger = require('morgan');
-const bodyParser = require('body-parser');
+// pulling in dependencies 
+const express = require("express");
+const morgan = require("morgan");
+const mongoose = require("mongoose");
 
-// ceate an express app 
-const app = express(); 
+// created express app 
+const app = express();
 
-// use middleware to handle data parsing as well as to render static files 
-app.use(express.urlencoded({ extended: true})); 
-app.use(express.json()); 
-app.use(express.static('public')); 
+// setting up port 
+const PORT = process.env.PORT || 8080;
 
-// use and bring in logger 
-app.use(logger("dev"));
+// bringing in middleware 
+app.use(morgan("dev"));
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
+app.use(express.static('public'));
 
-// require the models folder 
-const db = require('./models'); 
+// creating Mongoose connection 
+mongoose.connect(
+    process.env.MONGODB_URI || 'mongodb://localhost/Fitness-Tracker',
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+      useFindAndModify: false
+    }
+  );
+// access to routes 
+require("./routes/api-route")(app);
+require("./routes/html-route")(app);
 
-// require the routes folder 
-app.use(require('./routes/api-route.js')); 
-app.use(require('./routes/html-route.js')); 
-
-// make the Mongo connection 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { useUnifiedTopology: true });
-
-// set up a port 
-const PORT = process.env.PORT || 8080; 
-// listen in on port 
-app.listen(PORT, function  () {
-    console.log('Listening on Server PORT ' + PORT);
-})
+// setting up port to listen 
+app.listen(PORT,function(){ 
+    console.log(`Lstening on Port ${PORT}`);
+});

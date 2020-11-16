@@ -1,37 +1,54 @@
-// require the models folder 
-const db = require('../models')
+// importing the workout file 
+const Workout = require("../models/workout")
 
-// create the function and execute the routes if called on 
-module.exports = (app) => {
+// GET/POST/PUT methods 
+module.exports = function (app) { 
 
-//GET ROUTE that will find workouts and render all to the page 
-    app.get("/api/workoutChoices", (req, res) => {
-        db.Workout.find({}, (err, workoutChoices) => {
-            if(err) {
-                console.log("Error ", err);
-            } else {
-                res.json(workoutChoices)
-            }
-        });
-    });
-    
-//PUT ROUTE that will allow user to modify a workout -- here we are restructuring 
-    app.put("/api/workouts/:changeWorkout", ({ params, body }, res) => {
-        db.Workout.findOneAndUpdate({ _id: params.id},
-                                    {$push: {excercises:body }},
-                                    { upsert: true, useFindandModify:false},
-                                    changeWorkout => {
-                                        res.json(changeWorkout);
-                                    })
+    app.get("/api/workouts", function (req,res) {  
+        Workout.find()
+        .then(data => {  
+            res.json(data)
+        })
+        .catch(err => { 
+            res.json(err)
+        })
     });
 
-// POST ROUTE that will allow user to add a workout
-    app.post('/api/workout', (req,res) => {
-        db.Workout.create({}).then(Workout => {
-            res.json(Workout);
-        });
+    app.get("/api/workouts/range", function (req,res) {  
+        Workout.find()
+        .then (data => {  
+            res.json (data)
+        })
+        .catch(err => { 
+            res.json (err)
+        })
+    });
+
+    app.put("/api/workouts/:id", ({ body,params }, res) => {   
+        Workout.findByIdAndUpdate(  
+         params.id,
+         {$push:{ exercises:body }},
+         {new: true, runValidators: true }
+        )
+        .then(data => res.json(data))
+        .catch(err => { 
+            res.json(err)
+        })
+    });
+
+    app.post("/api/workouts", function (req,res) {    
+        Workout.create({})
+        .then(data => res.json(data))
+        .catch(err => { 
+            res.json(err)
+        })
+    });
+
+    app.post("/api/workouts/range",function (req,res) {    
+        Workout.create({})
+        .then (data => res.json(data))
+        .catch (err => { 
+            res.json(err)
+        })
     });
 }
-
-
-
