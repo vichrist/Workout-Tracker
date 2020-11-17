@@ -15,7 +15,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(express.static('public'));
 
-// creating Mongoose connection 
+  // creating Mongoose connection 
 mongoose.connect(
     process.env.MONGODB_URI || 'mongodb://localhost/Fitness-Tracker',
     {
@@ -31,5 +31,5 @@ require("./routes/html-route")(app);
 
 // setting up port to listen 
 app.listen(PORT,function(){ 
-    console.log(`Lstening on Port ${PORT}`);
+    console.log(`Listening on Port ${PORT}`);
 });
